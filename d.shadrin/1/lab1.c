@@ -12,7 +12,6 @@ struct opt_rec {
 };
 struct opt_rec saved[256];
 int save = 0;
-int U = 0;
 void do_i() {
   printf("uid = %d euid = %d gid = %d egid = %d\n", getuid(), geteuid(),
          getgid(), getegid());
@@ -30,11 +29,6 @@ void do_s() {
     printf("pgid = %d\n", getpgrp());
 }
 void do_u() {
-  if (U == 1) {
-    struct rlimit rl;
-    getrlimit(RLIMIT_FSIZE, &rl);
-    printf("ulimit = %lld\n", (unsigned long long)rl.rlim_cur);
-  } else
     printf("ulimit = %ld\n", sysconf(_SC_CHILD_MAX));
 }
 void do_U(const char *arg) {
@@ -96,7 +90,6 @@ int main(int argc, char *argv[]) {
       do_u();
       break;
     case 'U':
-      ++U;
       do_U(saved[i].arg);
       break;
     case 'c':
